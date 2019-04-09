@@ -1,15 +1,8 @@
 <?php
 
 /**
- * include assets
+ * including files from /functions/
  */
-// require dirname(__FILE__) . '/functions/enqueue_assets.php';
-
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
-
-
 function requireFilesDirLoop($path ) {
     $contents = scandir($path);
 
