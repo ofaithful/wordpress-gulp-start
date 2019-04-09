@@ -7,7 +7,8 @@ function _themename_assets() {
 
     # wp_enqueue_script($handle, $src, $deps, $ver, $in_footer)
     # main js bundle
-    wp_enqueue_script( '_themename-main-js', get_template_directory_uri() . '/dist/js/bundle.js', array(), '1.0.0', true);
+    wp_enqueue_script( '_themename-main-js', get_template_directory_uri() . '/dist/js/bundle.js', array(), '1.0.0', true);  
 }
 
-add_action('wp_enqueue_scripts', '_themename_assets');
+// add_action('wp_enqueue_scripts', '_themename_assets');
+_themename_assets(); 
