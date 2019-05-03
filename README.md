@@ -6,7 +6,15 @@ Clone or download this repository to your theme folder and run:
 ```bash
     npm install
 ```
-
+Once this done, open `gulpfile.babel.js` and change `proxy` property of a `serve` funciton to your localhost domain:
+```bash
+export const serve = (done) => {
+    server.init({
+        proxy: 'wp.test' //<- change this to you localhost domain.
+    });
+    done();
+}
+```
 
 ## Usage
 After installing all the packages run following command from your theme folder:
