@@ -13,26 +13,30 @@ import browserSync from 'browser-sync';
 
 const PRODUCTION = yargs.argv.prod;
 
-export const styles = () => {
-    return src('src/scss/bundle.scss')
+export const styles = async () => {
+    src('src/scss/bundle.scss')
         .pipe(gulpif(!PRODUCTION, sourcemaps.init()))
         .pipe(sass().on('error', sass.logError))
         .pipe(gulpif(PRODUCTION, postcss([autoprefixer])))
         .pipe(gulpif(PRODUCTION, cleanCss({compatibility: 'ie8'})))
         .pipe(gulpif(!PRODUCTION, sourcemaps.write()))
-        .pipe(dest('dist/css'))
+        .pipe(dest('resources/assets/css'))
         .pipe(server.stream());
+    // done();
+    // return true;
 }
 
-export const images = () => {
-    return src('src/images/**/*.{jpg,jpeg,png,svg,gif}')
+export const images = (done) => {
+    src('src/images/**/*.{jpg,jpeg,png,svg,gif}')
         .pipe(gulpif(PRODUCTION, imagemin()))
-        .pipe(dest('dist/images'));
+        .pipe(dest('resources/assets/images'));
+    done();
+    return true;
 }
 
 export const watchForChanges = () => {
     watch('src/scss/**/*.scss', styles);
-    watch('src/images/**/*.{jpg,jpeg,png,svg,gif}', series(images, reload));
+    // watch('src/images/**/*.{jpg,jpeg,png,svg,gif}', series(images, reload));
     watch('src/js/**/*.js', series(scripts, reload));
     watch('**/*.php', reload);
 }
@@ -41,7 +45,7 @@ const server = browserSync.create();
 
 export const serve = (done) => {
     server.init({
-        proxy: 'wp.test' //<- change this
+        proxy: 'localhost' //<- change this
     });
     done();
 }
@@ -59,6 +63,7 @@ export const scripts = () => {
                 rules: [
                     {
                         test: /\.js$/,
+                        exclude: /(node_modules)/,
                         use: {
                             loader: 'babel-loader',
                             options: {
@@ -74,8 +79,9 @@ export const scripts = () => {
                 filename: '[name].js'
             },
         }))
-        .pipe(dest('dist/js'));
+        .pipe(dest('resources/assets/js'));
 }
 
-export const dev = series(parallel(styles, images, scripts), serve, watchForChanges);
+export const dev = series(parallel(styles, scripts), serve, watchForChanges);
+
 export default dev;
